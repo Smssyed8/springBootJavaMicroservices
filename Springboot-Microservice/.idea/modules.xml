@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/cloud-gateway/.mvn/.mvn.iml" filepath="$PROJECT_DIR$/cloud-gateway/.mvn/.mvn.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cloud-config-server/.mvn/.mvn1.iml" filepath="$PROJECT_DIR$/cloud-config-server/.mvn/.mvn1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/department-service/.mvn/.mvn2.iml" filepath="$PROJECT_DIR$/department-service/.mvn/.mvn2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hystrix-dashboard/.mvn/.mvn3.iml" filepath="$PROJECT_DIR$/hystrix-dashboard/.mvn/.mvn3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-registry/.mvn/.mvn4.iml" filepath="$PROJECT_DIR$/service-registry/.mvn/.mvn4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/user-service/.mvn/.mvn5.iml" filepath="$PROJECT_DIR$/user-service/.mvn/.mvn5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/department-service/src/main/main.iml" filepath="$PROJECT_DIR$/department-service/src/main/main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cloud-config-server/src/main/main1.iml" filepath="$PROJECT_DIR$/cloud-config-server/src/main/main1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/user-service/src/main/main2.iml" filepath="$PROJECT_DIR$/user-service/src/main/main2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hystrix-dashboard/src/main/main3.iml" filepath="$PROJECT_DIR$/hystrix-dashboard/src/main/main3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-registry/src/main/main4.iml" filepath="$PROJECT_DIR$/service-registry/src/main/main4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cloud-gateway/src/main/main5.iml" filepath="$PROJECT_DIR$/cloud-gateway/src/main/main5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cloud-gateway/src/test/test.iml" filepath="$PROJECT_DIR$/cloud-gateway/src/test/test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/department-service/src/test/test1.iml" filepath="$PROJECT_DIR$/department-service/src/test/test1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/user-service/src/test/test2.iml" filepath="$PROJECT_DIR$/user-service/src/test/test2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cloud-config-server/src/test/test3.iml" filepath="$PROJECT_DIR$/cloud-config-server/src/test/test3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hystrix-dashboard/src/test/test4.iml" filepath="$PROJECT_DIR$/hystrix-dashboard/src/test/test4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-registry/src/test/test5.iml" filepath="$PROJECT_DIR$/service-registry/src/test/test5.iml" />
+    </modules>
+  </component>
+</project>
