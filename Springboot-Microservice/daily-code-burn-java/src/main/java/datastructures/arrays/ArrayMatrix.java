@@ -1,6 +1,6 @@
 package datastructures.arrays;
 
-public class Matrix {
+public class ArrayMatrix {
 	static void createMatrix() {
 		AddingTwoMatrix();
 	}

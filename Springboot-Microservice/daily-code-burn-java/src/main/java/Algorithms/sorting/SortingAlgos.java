@@ -1,4 +1,4 @@
-package datastructures.z.problems.sorting;
+package Algorithms.sorting;
 
 import java.util.Arrays;
 import java.util.Scanner;

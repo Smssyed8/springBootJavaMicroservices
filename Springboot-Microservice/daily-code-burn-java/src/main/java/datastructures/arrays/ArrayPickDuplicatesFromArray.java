@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-public class PickDuplicatesFromArray {
+public class ArrayPickDuplicatesFromArray {
 	
 	static void printPairs(int key2, int[] unSortedArr2) {
 		// TODO Auto-generated method stub

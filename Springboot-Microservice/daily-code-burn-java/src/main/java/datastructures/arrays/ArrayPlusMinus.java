@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import static java.util.stream.Collectors.toList;
 
-public class PlusMinus {
+public class ArrayPlusMinus {
 
 	
 	public static void plusMinus(List<Integer> arr) {

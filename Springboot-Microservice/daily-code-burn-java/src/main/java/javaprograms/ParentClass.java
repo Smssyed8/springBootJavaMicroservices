@@ -53,6 +53,10 @@ public class ParentClass {
 		System.out.println("parent public method");
 	}
 	
+	public void parentObject() {
+		
+	}
+	
 	public void publicParentMethod() { System.out.println("parent public method"); }
 	
 }

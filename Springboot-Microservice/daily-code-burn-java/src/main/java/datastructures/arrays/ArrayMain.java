@@ -8,8 +8,8 @@ public class ArrayMain {
 
     public static void main(String[] args) {
 
-    	Matrix matrix = new Matrix();
-    	matrix.createMatrix();
+    	ArrayMatrix arrayMatrix = new ArrayMatrix();
+    	arrayMatrix.createMatrix();
 
     }
 
