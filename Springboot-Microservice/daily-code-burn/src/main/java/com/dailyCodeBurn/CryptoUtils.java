@@ -5,12 +5,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -20,6 +23,8 @@ import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.KeySpec;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,11 +33,15 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 public class CryptoUtils {
 
@@ -40,10 +49,35 @@ public class CryptoUtils {
 	 * @Autowired ResourceLoader resourceLoader;
 	 */
 	ClassLoader classLoader = getClass().getClassLoader();
-	
-	static void fileProcessor(int cipherMode, String key, File inputFile, File outputFile) throws URISyntaxException {
+
+	static void fileProcessor(int cipherMode, File key, File inputFile, File outputFile) throws URISyntaxException {
 		try {
-			Key secretKey = new SecretKeySpec(key.getBytes(), "AES");
+			
+			
+			
+			/*
+			 * SecureRandom random = new SecureRandom(); byte[] salt = new byte[16];
+			 * random.nextBytes(salt);
+			 * 
+			 * KeySpec spec = new PBEKeySpec("password".toCharArray(), salt, 65536, 256); //
+			 * AES-256 SecretKeyFactory f =
+			 * SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1"); byte[] key =
+			 * f.generateSecret(spec).getEncoded(); SecretKeySpec keySpec = new
+			 * SecretKeySpec(key, "AES");
+			 * 
+			 * byte[] ivBytes = new byte[16]; random.nextBytes(ivBytes); IvParameterSpec iv
+			 * = new IvParameterSpec(ivBytes);
+			 * 
+			 * Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			 * c.init(Cipher.ENCRYPT_MODE, keySpec, iv); byte[] encValue =
+			 * c.doFinal(valueToEnc.getBytes());
+			 * 
+			 * byte[] finalCiphertext = new byte[encValue.length+2*16];
+			 * 
+			 */
+			
+			byte[] fileContent = Files.readAllBytes(key.toPath());
+			Key secretKey = new SecretKeySpec(fileContent, "AES");
 			Cipher cipher = Cipher.getInstance("AES");
 			cipher.init(cipherMode, secretKey);
 
@@ -60,14 +94,14 @@ public class CryptoUtils {
 			 * outputFile.toString());
 			 */
 			String dir = CryptoUtils.class.getResource("/decrypted").getFile();
-	        //String dir = WriteResource.class.getResource("/dir").getFile();
+			// String dir = WriteResource.class.getResource("/dir").getFile();
 			FileOutputStream outputStream = new FileOutputStream(outputFile);
 			outputStream.write(outputBytes);
-	        //final PrintStream printStream = new PrintStream(os);
-	        //printStream.println(thing);
-	        //printStream.close();
-			//FileOutputStream outputStream = new FileOutputStream(outputFile);
-			//outputStream.write(outputBytes);
+			// final PrintStream printStream = new PrintStream(os);
+			// printStream.println(thing);
+			// printStream.close();
+			// FileOutputStream outputStream = new FileOutputStream(outputFile);
+			// outputStream.write(outputBytes);
 
 			inputStream.close();
 			outputStream.close();
@@ -85,7 +119,7 @@ public class CryptoUtils {
 		// The class loader that loaded the class
 		ClassLoader classLoader = getClass().getClassLoader();
 		URL dir = classLoader.getResource("/decrypted");
-		//System.out.println(dir);
+		// System.out.println(dir);
 		InputStream inputStream = classLoader.getResourceAsStream(fileName);
 
 		// the stream holding the file content
@@ -99,15 +133,28 @@ public class CryptoUtils {
 
 	private List<File> getAllFilesFromResource(String folder) throws URISyntaxException, IOException {
 
+		System.out.println(CryptoUtils.class.getClassLoader().getResourceAsStream(folder));
+		if (CryptoUtils.class.getClassLoader().getResource(folder) != null) {
+			URL resource = CryptoUtils.class.getClassLoader().getResource(folder);
+			System.out.println(resource.toURI());
+		}
 		ClassLoader classLoader = getClass().getClassLoader();
 
 		URL resource = classLoader.getResource(folder);
-
+		// System.out.println(resource);
+		System.out.println(resource.toURI());
 		// dun walk the root path, we will walk all the classes
 		List<File> collect = Files.walk(Paths.get(resource.toURI())).filter(Files::isRegularFile).map(x -> x.toFile())
 				.collect(Collectors.toList());
 
 		return collect;
+	}
+
+	private Resource[] getXMLResources(String folder) throws IOException {
+		ClassLoader classLoader = MethodHandles.lookup().getClass().getClassLoader();
+		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(classLoader);
+
+		return resolver.getResources("classpath:decrypted");
 	}
 
 	/*
@@ -183,30 +230,28 @@ public class CryptoUtils {
 	}
 
 	public static void main(String[] args) {
-		String key = "This is a secret";
-		File inputFile = new File("text.txt");
-		File encryptedFile = new File("plex.txt");
-		File decryptedFile = new File("plex.png");
-
-		CryptoUtils app = new CryptoUtils();
-
-		// String fileName = "database.properties";
-		String fileName = "decrypted/plex.png";
-		
-		System.out.println("getResourceAsStream : " + fileName);
-		//InputStream is = app.getFileFromResourceAsStream(fileName);
-
-		// read all files from a resources folder
 		/*
+		 * File encryptedFile = new File("dockercopy1"); File decryptedFile = new
+		 * File("dockercopy1");
+		 * 
+		 * 
+		 * 
+		 * // String fileName = "database.properties"; String fileName =
+		 * "decrypted/dockercopy1";
+		 * 
+		 * System.out.println("getResourceAsStream : " + fileName); // InputStream is =
+		 * app.getFileFromResourceAsStream(fileName);
+		 * 
+		 * // read all files from a resources folder
+		 * 
 		 * try {
 		 * 
 		 * // files from src/main/resources/json List<File> result =
-		 * app.getAllFilesFromResource("/decrypted"); for (File file : result) {
+		 * app.getAllFilesFromResource("decrypted/"); for (File file : result) {
 		 * System.out.println("file : " + file); // printFile(file); }
 		 * 
 		 * } catch (URISyntaxException | IOException e) { e.printStackTrace(); }
 		 */
-
 		// Sample 3 - read all files from a resources folder (JAR version)
 		/*
 		 * try {
@@ -233,11 +278,40 @@ public class CryptoUtils {
 		 * InputStream inputStream = resource.getInputStream();
 		 */
 
+		
+		
+		//byte[] fileContent = Files.readAllBytes(inputFile);
 		try {
-			File file = app.getFileFromResource(fileName);
-			CryptoUtils.fileProcessor(Cipher.ENCRYPT_MODE, key, file, encryptedFile);
-			CryptoUtils.fileProcessor(Cipher.DECRYPT_MODE, key, encryptedFile, decryptedFile);
-			System.out.println("Sucess");
+			String key = "This is a secret";
+			CryptoUtils app = new CryptoUtils();
+			//String inputFile = "";
+			File encryptK = new File("encrypt.txt");
+			File inputFile = app.getFileFromResource("text.txt");
+			List<String> fileNames = new ArrayList<String>();
+			List<File> result = app.getAllFilesFromResource("decrypted/");
+			
+			//byte[] fileContent = Files.readAllBytes(inputFile.toPath());
+			//CryptoUtils.fileProcessor(Cipher.ENCRYPT_MODE, inputFile, inputFile, encryptK);
+			
+			int j = 0;
+			for (File fileV : result) {
+				j++;
+				fileNames.add(fileV.getName());
+				File encryptedFil = new File("dept/encr_" + j);
+				File decryptedFil = new File(fileV.getName());
+				CryptoUtils.fileProcessor(Cipher.ENCRYPT_MODE, inputFile, fileV, encryptedFil);
+				//CryptoUtils.fileProcessor(Cipher.DECRYPT_MODE, inputFile, encryptedFil, decryptedFil);
+			}
+
+			FileWriter writer = new FileWriter("dept/namePt.txt");
+			int i = 0;
+			for (String str : fileNames) {
+				i++;
+				writer.write(i+" - "+str + System.lineSeparator());
+			}
+			writer.close();
+
+			System.out.println(fileNames);
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 			ex.printStackTrace();
